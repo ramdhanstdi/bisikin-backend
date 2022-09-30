@@ -1,20 +1,23 @@
 const prisma = require('../helpers/prisma');
 
-exports.craeteUsersModel = async (data) => {
+exports.createUsersModel = async (data) => {
   const results = {}
-  const user = await prisma.users.create({
-    data: {
+  try{
+    const user = await prisma.users.create({
       data
-    }
-  })
-  results.user = user;
-
-  const profile = await prisma.profile.create({
-    data: {
-      data,
-      user_id: user.id
-    }
-  })
-  results.profile = profile;
-  return results;
+    })
+  
+    const profile = await prisma.profile.create({
+      data: {
+        username: user.username,
+        email: user.email,
+        user_id: user.id,
+      }
+    })
+    return results;
+  }
+  catch(err){
+    results.error = err
+    return results;
+  }
 }

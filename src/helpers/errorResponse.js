@@ -1,14 +1,14 @@
 const response = require('./standardResponse');
 
-const handleError = (msg,param, location='body') => {
+const handleError = (msg,param, location='body') => [
   msg,
   param,
   location
-}
+]
 
 const errorResponse = (err,res) => {
-  if(err.code === '23505' && err.detail.includes('email')){
-    const resErr = handleError('Email Already Use', 'email');
+  if(err.code === 'P2002' && err.meta.target[0]==='username'){
+    const resErr = handleError('Username Already Use', 'username');
     return response(res, 'Error', resErr, null, 400);
   }
 }

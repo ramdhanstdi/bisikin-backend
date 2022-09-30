@@ -4,10 +4,13 @@ const userModels = require('../models/users');
 
 exports.createUsers = async (req,res) => {
   try{
-    const results = await userModels.craeteUsersModel(req.body);
-    return response(res,'Registes Success', results)
+    const results = await userModels.createUsersModel(req.body);
+    if(results.error){
+      return errorResponse(results.error,res);
+    }
+    return response(res,'Register Success')
   }
-  catch(e){
+  catch(err){
     return errorResponse(err, res)
   }
 }
