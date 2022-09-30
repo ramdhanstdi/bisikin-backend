@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,93 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model cell_chats {
+  id                            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at                    DateTime?       @default(now()) @db.Timestamptz(6)
+  user1                         String?         @db.Uuid
+  user2                         String?         @db.Uuid
+  isMatch                       Boolean?        @default(false)
+  users_cell_chats_user1Tousers users?          @relation("cell_chats_user1Tousers", fields: [user1], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_cell_chats_user2Tousers users?          @relation("cell_chats_user2Tousers", fields: [user2], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  content_chats                 content_chats[]
+}
+
+model cell_group {
+  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at    DateTime?       @default(now()) @db.Timestamptz(6)
+  user_id       String?         @db.Uuid
+  tittle        String          @db.VarChar
+  description   String?         @db.VarChar
+  gphoto        String?         @db.VarChar
+  users         users?          @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  content_group content_group[]
+}
+
+model content_chats {
+  id                               String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at                       DateTime?   @default(now()) @db.Timestamptz(6)
+  cell_id                          String?     @db.Uuid
+  user1                            String?     @db.Uuid
+  user2                            String?     @db.Uuid
+  media                            String?     @db.VarChar
+  cell_chats                       cell_chats? @relation(fields: [cell_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_content_chats_user1Tousers users?      @relation("content_chats_user1Tousers", fields: [user1], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_content_chats_user2Tousers users?      @relation("content_chats_user2Tousers", fields: [user2], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model content_group {
+  id         String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at DateTime?   @default(now()) @db.Timestamptz(6)
+  user_id    String?     @db.Uuid
+  group_id   String?     @db.Uuid
+  media      String?     @db.VarChar
+  cell_group cell_group? @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users      users?      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model device {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  token      String?   @db.VarChar
+  user_id    String?   @db.Uuid
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model otp {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  number     Int?
+  isUsed     Boolean?  @default(false)
+}
+
+model profile {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  user_id    String?   @db.Uuid
+  username   String?   @db.VarChar
+  email      String?   @db.VarChar
+  first_name String?   @db.VarChar
+  last_name  String?   @db.VarChar
+  bio        String?   @db.VarChar
+  photo      String?   @db.VarChar
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id                                       String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at                               DateTime?       @default(now()) @db.Timestamptz(6)
+  username                                 String?         @unique @db.VarChar
+  email                                    String?         @unique @db.VarChar
+  isActive                                 Boolean?        @default(false)
+  password                                 String?         @db.VarChar
+  cell_chats_cell_chats_user1Tousers       cell_chats[]    @relation("cell_chats_user1Tousers")
+  cell_chats_cell_chats_user2Tousers       cell_chats[]    @relation("cell_chats_user2Tousers")
+  cell_group                               cell_group[]
+  content_chats_content_chats_user1Tousers content_chats[] @relation("content_chats_user1Tousers")
+  content_chats_content_chats_user2Tousers content_chats[] @relation("content_chats_user2Tousers")
+  content_group                            content_group[]
+  device                                   device[]
+  profile                                  profile[]
 }
