@@ -11,6 +11,10 @@ const errorResponse = (err,res) => {
     const resErr = handleError('Username Already Use', 'username');
     return response(res, 'Error', resErr, null, 400);
   }
+  if(err.code === 'P2002' && err.meta.target[0]==='email'){
+    const resErr = handleError('Email Already Use', 'email');
+    return response(res, 'Error', resErr, null, 400);
+  }
 }
 
 module.exports = errorResponse;
