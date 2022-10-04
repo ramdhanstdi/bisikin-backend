@@ -13,4 +13,17 @@ exports.editProfile = async(req, res) => {
   catch (err) {
     return errorResponse(err,res)
   }
-}
+};
+
+exports.getProfile = async(req, res) => {
+  try {
+    const results = await profileModels.getProfileModel(req.authUser.id);
+    if(results.error){
+      return errorResponse(results.error,res);
+    }
+    return response(res, 'Profile Show', results.data[0]);
+  } 
+  catch (err) {
+    return errorResponse(err,res);
+  }
+};

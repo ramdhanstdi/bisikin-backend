@@ -8,9 +8,9 @@ const auth = (req, res, next) => {
     if(auth.startsWith(prefix)){
       const token = auth.slice(prefix.length+1, auth.length);
       try{
-        const result = jwt.verify(token,process.env.APP_KEY || 'secretkey');
+        const result = jwt.verify(token,process.env.APP_KEY || 'k4Aul4h');
         req.authUser = result;
-        next
+        next()
       }
       catch(err){
         return response(res, 'Token Expired', null, null, 401);

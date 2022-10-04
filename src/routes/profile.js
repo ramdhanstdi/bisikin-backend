@@ -10,7 +10,7 @@ const userSchema = [
   body('email').notEmpty().isEmail().withMessage('Wrong Email Format').escape(),
 ]
 
-
+profile.get('/profile',auth,profileController.getProfile);
 profile.patch('/profile',auth,uploadFile,...userSchema,validation,profileController.editProfile);
 
 module.exports = profile
