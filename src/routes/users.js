@@ -15,5 +15,6 @@ const userSchema = [
 ]
 
 users.post('/register',...userSchema,validation,usersController.createUsers);
+users.post('/login',userSchema[1],validation,usersController.getUser);
 
 module.exports = users;

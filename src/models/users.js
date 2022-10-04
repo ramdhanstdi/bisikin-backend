@@ -21,3 +21,20 @@ exports.createUsersModel = async (data) => {
     return results;
   }
 }
+
+exports.getUserByEmail = async(email) => {
+  const results = {};
+  try{
+    const user = await prisma.users.findMany({
+      where: {
+        email: email,
+      }
+    })
+    results.data = user;
+    return results;
+  }
+  catch(err){
+    results.error = err;
+    return results
+  }
+}
