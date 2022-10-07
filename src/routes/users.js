@@ -1,5 +1,6 @@
 const users = require('express').Router();
 const usersController = require('../controller/users');
+const authController = require('../controller/auth');
 const {body} = require('express-validator');
 const bcrypt = require('bcrypt');
 const validation = require('../middleware/validation');
@@ -15,6 +16,6 @@ const userSchema = [
 ]
 
 users.post('/register',...userSchema,validation,usersController.createUsers);
-users.post('/login',userSchema[1],validation,usersController.getUser);
+users.post('/login',userSchema[1],validation,authController.loginUser);
 
 module.exports = users;
