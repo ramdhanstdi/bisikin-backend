@@ -14,3 +14,31 @@ exports.createOtpModel = async(data) =>{
     return results;
   }
 };
+
+exports.editOtpModel = async(data) => {
+  const results = {};
+  try {
+    const findotp = await prisma.otp.findMany({
+      where: {
+        number: parseInt(data.number),
+        AND: {
+          isUsed: false
+        }
+      }
+    })
+    const otp = await prisma.otp.update({
+      where: {
+        id: findotp[0].id,
+      },
+      data: {
+        isUsed: true,
+      }
+    })
+    results.data = otp;
+    return results;
+  } catch (error) {
+    console.log(error);
+    results.error = error;
+    return results;
+  }
+}

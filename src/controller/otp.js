@@ -1,9 +1,13 @@
 const response = require('../helpers/standardResponse');
-const errorResponse = require('../helpers/errorResponse');
 const otpModels = require('../models/otp');
 
 exports.createOtp = async(req,res) => {
   const number = Math.floor(100000 + Math.random() * 900000);
   const otp = await otpModels.createOtpModel({number});
-  return response(res, 'Number OTP',otp);
-}
+  return response(res, 'Number OTP',otp.data);
+};
+
+exports.editOtp = async(req,res) => {
+  const otp = await otpModels.editOtpModel(req.body);
+  return response(res, 'OTP Success', otp.data);
+};
