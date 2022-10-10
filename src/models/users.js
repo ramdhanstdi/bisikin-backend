@@ -14,6 +14,7 @@ exports.createUsersModel = async (data) => {
         user_id: user.id,
       }
     })
+    results.data = profile;
     return results;
   }
   catch(err){

@@ -3,6 +3,25 @@ const errorResponse = require('../helpers/errorResponse');
 const otpSender = require('../helpers/mailler');
 const otpMaker = require('./otp');
 const userModels = require('../models/users');
+const jwt = require('jsonwebtoken')
+
+exports.registerAccount = async (req,res) => {
+  try {
+    const results = await userModels.createUsersModel(req.body);
+    if(results.error){
+      console.log(results.error);
+      return errorResponse(results.error,res)
+    }
+    const token = jwt.sign({id: results.data.user_id}, process.env.APP_KEY || 'k4Aul4h');
+    console.log(token);
+    const otp = otpMaker.createOtp();
+    const sending = await otpSender.sendToEMail({user: req.body.email, OTP: otp});
+    console.log(sending);
+    return response('Register Successfully Check Email for OTP', {token})
+  } catch (error) {
+    return errorResponse(error,res)
+  }
+};
 
 exports.loginUser = async (req,res) => {
   try {
@@ -29,5 +48,14 @@ exports.loginUser = async (req,res) => {
       })
   } catch (err) {
     return errorResponse(err,res)
+  }
+};
+
+exports.confirmOTP = async(req,res) => {
+  try {
+    const results = await otpMaker.editOtp(req.body);
+    return results
+  } catch (error) {
+    return error
   }
 };
