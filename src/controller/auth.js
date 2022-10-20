@@ -1,5 +1,6 @@
 const response = require('../helpers/standardResponse');
 const errorResponse = require('../helpers/errorResponse');
+const otpModels = require('../models/otp');
 const otpSender = require('../helpers/mailler');
 const otpMaker = require('./otp');
 const userModels = require('../models/users');
@@ -32,9 +33,18 @@ exports.loginUser = async (req,res) => {
     if(results.data.length < 1){
       return response(res, 'Wrong Email or Password', null, null, 400);
     }
-    const otp = await otpMaker.createOtp();
     const user = results.data
-    otpSender.sendToEMail({user :user[0].email, OTP: otp.number})
+    const number = Math.floor(100000 + Math.random() * 900000);
+    const otp = await otpModels.createOtpModel({number});
+    otpSender.sendToEMail({user :user[0].email, OTP: otp.data.number},(err,res)=>{
+      if(err){
+        console.log(err);
+        return errorResponse(err,res);
+      }else{
+        console.log(res);
+        console.log('sent');
+      }
+    });
     bcrypt.compare(req.body.password,user[0].password)
       .then((cpres)=>{
         if(cpres){
