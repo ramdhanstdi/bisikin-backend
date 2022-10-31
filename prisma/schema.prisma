@@ -84,8 +84,8 @@ model users {
   created_at                               DateTime?       @default(now()) @db.Timestamptz(6)
   username                                 String?         @unique @db.VarChar
   email                                    String?         @unique @db.VarChar
-  isActive                                 Boolean?        @default(false)
   password                                 String?         @db.VarChar
+  isActive                                 Boolean?        @default(false)
   cell_chats_cell_chats_user1Tousers       cell_chats[]    @relation("cell_chats_user1Tousers")
   cell_chats_cell_chats_user2Tousers       cell_chats[]    @relation("cell_chats_user2Tousers")
   cell_group                               cell_group[]
@@ -94,4 +94,13 @@ model users {
   content_group                            content_group[]
   device                                   device[]
   profile                                  profile[]
+  token_device                             token_device[]
+}
+
+model token_device {
+  id         String    @id @db.Uuid
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  user_id    String?   @db.Uuid
+  token      String?   @db.VarChar
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

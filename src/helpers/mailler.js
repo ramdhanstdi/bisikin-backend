@@ -1,3 +1,5 @@
+const nodemailer = require('nodemailer');
+
 const MAIL_SETTINGS= {
   service: 'gmail',
   auth: {
@@ -6,14 +8,14 @@ const MAIL_SETTINGS= {
   },
 }
   
-const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport(MAIL_SETTINGS);
 
-module.exports.sendMail = async (params) => {
+module.exports.sendMail = async (data) => {
+  console.log(data);
   try {
     let info = await transporter.sendMail({
       from: MAIL_SETTINGS.auth.user,
-      to: params.to, 
+      to: data.user, 
       subject: 'Hello ✔',
       html: `
       <div
@@ -23,7 +25,7 @@ module.exports.sendMail = async (params) => {
         <h2>Welcome to the club.</h2>
         <h4>You are officially In ✔</h4>
         <p style="margin-bottom: 30px;">Pleas enter the sign up OTP to get started</p>
-        <h1 style="font-size: 40px; letter-spacing: 2px; text-align:center;">${params.OTP}</h1>
+        <h1 style="font-size: 40px; letter-spacing: 2px; text-align:center;">${data.OTP}</h1>
    </div>
     `,
     });

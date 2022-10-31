@@ -36,7 +36,7 @@ exports.loginUser = async (req,res) => {
     const user = results.data
     const number = Math.floor(100000 + Math.random() * 900000);
     const otp = await otpModels.createOtpModel({number});
-    otpSender.sendToEMail({user :user[0].email, OTP: otp.data.number},(err,res)=>{
+    otpSender.sendMail({user :user[0].email, OTP: otp.data.number},(err,res)=>{
       if(err){
         console.log(err);
         return errorResponse(err,res);
