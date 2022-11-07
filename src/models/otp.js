@@ -26,6 +26,9 @@ exports.editOtpModel = async(data) => {
         }
       }
     })
+    if(!findotp){
+      return results.error = new Error('OTP has been Used')
+    }
     const otp = await prisma.otp.update({
       where: {
         id: findotp[0].id,
